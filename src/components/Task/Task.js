@@ -6,7 +6,7 @@ import DropdownMenu from "components/DropdownMenu/DropdownMenu";
 import { TaskDisplay } from "modalForms";
 import { ModalContext } from "context/ModalContext";
 
-const Task = ({ taskId, name, tags, people, dueDate }) => {
+const Task = ({ taskId, name, tags, people, dueDate, removeTask }) => {
   const [options, setOpntions] = useState(false);
 
   const [, modalDispatch] = useContext(ModalContext);
@@ -24,12 +24,18 @@ const Task = ({ taskId, name, tags, people, dueDate }) => {
     event.stopPropagation();
     setOpntions((options) => !options);
   };
+
+  const deleteTask = (event) => {
+    event.stopPropagation();
+    removeTask();
+  }
+
   return (
     <div className="task-card" onClick={openTaskDetailsModal}>
       {options && (
         <span className="drop-down-span">
           <DropdownMenu closeMenu={toggleOptions}>
-            <span>delete</span>
+            <span onClick={deleteTask}>delete</span>
             <span>edit</span>
           </DropdownMenu>
         </span>

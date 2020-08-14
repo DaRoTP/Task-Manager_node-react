@@ -60,7 +60,7 @@ const BoardPage = ({ boardId }) => {
 			listOfTasks: [
 				{
 					id: "TSK1",
-					name: "task1",
+					name: "five1",
 					dueDate: "2020-11-20",
 					tags: ["#D74530", "#25D68F"],
 					people: [
@@ -69,7 +69,7 @@ const BoardPage = ({ boardId }) => {
 					],
 				},
 				{
-					id: "TSK2",
+					id: "five2",
 					name: "task2",
 					dueDate: "2020-11-20",
 					tags: ["#D74530", "#25D68F"],
@@ -79,7 +79,7 @@ const BoardPage = ({ boardId }) => {
 					],
 				},
 				{
-					id: "TSK3",
+					id: "five3",
 					name: "task2",
 					dueDate: "2020-11-20",
 					tags: ["#D74530", "#25D68F"],
@@ -156,7 +156,7 @@ const BoardPage = ({ boardId }) => {
 			listOfTasks: [
 				{
 					id: "TSK1",
-					name: "task1",
+					name: "siz2",
 					dueDate: "2020-11-20",
 					tags: ["#D74530", "#25D68F"],
 					people: [
@@ -185,7 +185,7 @@ const BoardPage = ({ boardId }) => {
 					],
 				},
 			],
-		}
+		},
 	]);
 
 	const [, modalDispatch] = useContext(ModalContext);
@@ -203,6 +203,21 @@ const BoardPage = ({ boardId }) => {
 		});
 	};
 
+	const removeTaskFromColumn = (columnIndex, taskIndex) => {
+		setColumns(columns => {
+			const tempColumns = [...columns];
+			tempColumns[columnIndex].listOfTasks.splice(taskIndex, 1);
+			return tempColumns;
+		})
+	};
+	const removeColumn = (columnIndex) => {
+		setColumns(columns => {
+			const tempColumns = [...columns];
+			tempColumns.splice(columnIndex, 1);
+			return tempColumns;
+		})
+	};
+
 	const handleNewColumnChange = (event) => {
 		setNewColumn(event.target.value);
 	};
@@ -215,17 +230,16 @@ const BoardPage = ({ boardId }) => {
 				columnName: newColumn,
 				listOfTasks: [],
 			};
-			setColumns(columns => {
+			setColumns((columns) => {
 				const tempColumns = [...columns];
 				tempColumns.push(submittedColumn);
 				return tempColumns;
-			})
+			});
 		}
 	};
 
 	return (
 		<div className="board-page">
-			{/* <h1 className="board-title">{boardInfo.name}</h1> */}
 			<ExpandText classes={["board-title"]} text={boardInfo.name}>
 				<div>
 					hallo Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum rem tempore ex numquam
@@ -246,17 +260,19 @@ const BoardPage = ({ boardId }) => {
 				</Button>
 			</div>
 			<div className="board-page-container">
-				{columns.map(({ id, listOfTasks, columnName }) => (
+				{columns.map(({ id, listOfTasks, columnName }, index) => (
 					<span key={id}>
-						<TaskColumn columnName={columnName} listOfTasks={listOfTasks} />
+						<TaskColumn
+							removeTask={removeTaskFromColumn}
+							removeColumn={() => removeColumn(index)}
+							columnIndex={index}
+							columnName={columnName}
+							listOfTasks={listOfTasks}
+						/>
 					</span>
 				))}
 				<div>
 					<div className="add-new-column">
-						{/* <button onClick={openCreateNewColumn} className="btn-add-new-column">
-						<AddBoxIcon />
-						<span>New Column</span>
-					</button> */}
 						<input
 							onKeyDown={createNewColumn}
 							value={newColumn}

@@ -8,7 +8,7 @@ import { ModalContext } from "context/ModalContext";
 
 import { NewTask } from "modalForms";
 
-const TaskColumn = ({ columnName, listOfTasks }) => {
+const TaskColumn = ({ columnName, listOfTasks, columnIndex, removeTask, removeColumn }) => {
 	const [options, setOptions] = useState(false);
 	const toggleOptions = () => {
 		setOptions(!options);
@@ -33,14 +33,14 @@ const TaskColumn = ({ columnName, listOfTasks }) => {
 				</button>
 				{options && (
 					<DropdownMenu closeMenu={toggleOptions}>
-						<span>delete</span>
+						<span onClick={removeColumn}>delete</span>
 						<span>edit</span>
 					</DropdownMenu>
 				)}
 			</div>
 			<div className="task-container">
 				{listOfTasks &&
-					listOfTasks.map(({ id, name, tags, people, dueDate }) => (
+					listOfTasks.map(({ id, name, tags, people, dueDate }, index) => (
 						<Task
 							key={id}
 							taskId={id}
@@ -48,6 +48,7 @@ const TaskColumn = ({ columnName, listOfTasks }) => {
 							tags={tags}
 							people={people}
 							dueDate={dueDate}
+							removeTask={() => removeTask(columnIndex, index)}
 						/>
 					))}
 			</div>
