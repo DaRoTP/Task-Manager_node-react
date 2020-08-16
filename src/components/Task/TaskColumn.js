@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {  useContext, useRef } from "react";
 import "./TaskColumn.scss";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
@@ -8,12 +8,12 @@ import { ModalContext } from "context/ModalContext";
 
 import { NewTask } from "modalForms";
 
-const TaskColumn = ({ columnName, listOfTasks, columnIndex, removeTask, removeColumn }) => {
-	const [options, setOptions] = useState(false);
-	const toggleOptions = () => {
-		setOptions(!options);
-	};
+const TaskColumn = ({ columnName, listOfTasks }) => {
+
 	const [, modalDispatch] = useContext(ModalContext);
+
+	const anchorElement = useRef();
+
 	const openBoardTagsModal = () => {
 		modalDispatch({
 			type: "OPEN",
@@ -28,19 +28,17 @@ const TaskColumn = ({ columnName, listOfTasks, columnIndex, removeTask, removeCo
 				<button onClick={openBoardTagsModal} className="add-new-task-btn">
 					<PlaylistAddIcon />{" "}
 				</button>
-				<button onClick={toggleOptions} className="more-options">
+				<button ref={anchorElement} className="more-options">
 					<MoreVertIcon />
 				</button>
-				{options && (
-					<DropdownMenu closeMenu={toggleOptions}>
-						<span onClick={removeColumn}>delete</span>
-						<span>edit</span>
-					</DropdownMenu>
-				)}
+				<DropdownMenu anchorEl={anchorElement}>
+					<span>delete</span>
+					<span>edit</span>
+				</DropdownMenu>
 			</div>
-			<div className="task-container">
+			<div className={"task-container"}>
 				{listOfTasks &&
-					listOfTasks.map(({ id, name, tags, people, dueDate }, index) => (
+					listOfTasks.map(({ id, name, tags, people, dueDate }) => (
 						<Task
 							key={id}
 							taskId={id}
@@ -48,7 +46,6 @@ const TaskColumn = ({ columnName, listOfTasks, columnIndex, removeTask, removeCo
 							tags={tags}
 							people={people}
 							dueDate={dueDate}
-							removeTask={() => removeTask(columnIndex, index)}
 						/>
 					))}
 			</div>
